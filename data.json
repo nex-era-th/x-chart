@@ -1,17 +1,4 @@
 {
-  "x": ["jan","feb","mar","apr","may","jun"],
-  "datasets":[
-    { 
-	"label":"thailand", 
-	"data":[12,45,85,568,45,785]
-    },
-    { 
-	"label":"singapore", 
-	"data":[785,456,12,458,854,65]
-    },
-    { 
-	"label":"malaysia",
-      	"data":[452,45,85,65,325,785]
-    }
-  ]
+  "x":["thailand","singapore","malaysia"],
+  "y":[45612,84512,845652]
 }

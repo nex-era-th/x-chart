@@ -7,7 +7,7 @@
   by        : @devster,
   license   : none/cc0,
   directory : $home/node-x,
-  version   : 0.6,
+  version   : 0.7,
   releasedDate: not yet,
 }*/
 
@@ -20,7 +20,7 @@ if (process.argv[2] === 'help') {
 const fs = require('fs');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const path = require('path');
-const { prepData } = require('./prep-data.js')
+const { prepData } = require('./prep-data.js');
 
 const width = 800;
 const height = 600;
@@ -66,24 +66,30 @@ async function main() {
 
   if (isMultiDataset) {
     // expected format: { x: [...], datasets: [ { label, data }, { label, data } ] }
-    datasets = data.datasets.map(ds => ({
-      label: ds.label,
-      data: ds.data,
-      backgroundColor: chartType === 'pie' ? randomColor() : 'rgba(54, 162, 235, 0.6)',
-      borderColor: chartType === 'pie' ? '#fff' : 'rgba(54, 162, 235, 1)',
-      fill: chartType === 'line' ? false : true,
-      tension: chartType === 'line' ? 0.3 : undefined
-    }));
+    datasets = data.datasets.map(ds => {
+      const bgColor = randomColor();
+      return {
+        label: ds.label,
+        data: ds.data,
+        backgroundColor: chartType === 'pie' ? bgColor : bgColor,
+        borderColor: chartType === 'pie' ? '#fff' : darkenColor(bgColor),
+        fill: chartType === 'line' ? false : true,
+        tension: chartType === 'line' ? 0.3 : undefined
+      };
+    });
   } else {
     if (!data.x || !data.y || !Array.isArray(data.x) || !Array.isArray(data.y)) {
       console.error("JSON must contain 'x' and 'y' arrays.");
       process.exit(1);
     }
+
+    const bgColor = randomColor();
+
     datasets = [{
       label: chartTitle,
       data: data.y,
-      backgroundColor: chartType === 'pie' ? data.x.map(_ => randomColor()) : 'rgba(54, 162, 235, 0.6)',
-      borderColor: chartType === 'pie' ? data.x.map(_ => '#fff') : 'rgba(54, 162, 235, 1)',
+      backgroundColor: chartType === 'pie' ? data.x.map(_ => randomColor()) : bgColor,
+      borderColor: chartType === 'pie' ? data.x.map(_ => '#fff') : darkenColor(bgColor),
       borderWidth: 1,
       fill: chartType === 'line' ? false : true,
       tension: chartType === 'line' ? 0.3 : undefined
@@ -124,6 +130,11 @@ function randomColor() {
   const g = Math.floor(Math.random() * 156 + 100);
   const b = Math.floor(Math.random() * 156 + 100);
   return `rgb(${r}, ${g}, ${b})`;
+}
+
+function darkenColor(rgb) {
+  const [r, g, b] = rgb.match(/\d+/g).map(Number);
+  return `rgb(${Math.floor(r * 0.8)}, ${Math.floor(g * 0.8)}, ${Math.floor(b * 0.8)})`;
 }
 
 main();

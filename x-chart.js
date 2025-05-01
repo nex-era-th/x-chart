@@ -13,7 +13,7 @@
 
 // help
 if (process.argv[2] === 'help') {
-  console.log('syntax:\n./make-chart-from.js data.json "chart title" bar*|bar-h|line|pie [visit-data]')
+  console.log('syntax:\n./x-chart.js data.json "chart title" bar*|bar-h|line|pie [visit-data]')
   process.exit(0)
 }
 

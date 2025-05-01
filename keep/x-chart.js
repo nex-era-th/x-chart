@@ -3,38 +3,46 @@
 /*{
   program   : make-chart-from.js,
   for       : make chart from json data,
-  how       : $ ./make-chart-from.js data.json "chart title" bar|bar-h|line|pie [visit-data]
+  how: $ ./x-chart.js data.json "title" bar|bar-h|line|pie [visit-data]
   by        : @devster,
   license   : none/cc0,
   directory : $home/node-x,
-  version   : 0.7,
+  version   : 1.0,
   releasedDate: not yet,
 }*/
 
+// help
 if (process.argv[2] === 'help') {
-  console.log('syntax:\n./make-chart-from.js data.json "chart title" bar*|bar-h|line|pie [visit-data]');
-  process.exit(0);
+  console.log('! syntax:\n./make-chart-from.js data.json "chart title" bar*|bar-h|line|pie [visit-data]')
+  process.exit(0)
 }
 
 const fs = require('fs');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const path = require('path');
 const { prepData } = require('./prep-data.js');
-const chartjsPluginDatalabels = require('chartjs-plugin-datalabels');
 
 const width = 800;
 const height = 600;
+const chartCallback = (ChartJS) => {};
 
-const chartCallback = (ChartJS) => {
-  ChartJS.register(chartjsPluginDatalabels);
+const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback, backgroundColour: 'white' });
+
+// Custom plugin to stamp 'x-chart' at top-right corner of the whole image
+const cornerStampPlugin = {
+  id: 'cornerStampPlugin',
+  afterRender: (chart) => {
+    const ctx = chart.ctx;
+    const text = 'x-chart';
+    ctx.save();
+    ctx.font = '10px sans-serif';
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.fillText(text, chart.width - 6, 6);
+    ctx.restore();
+  }
 };
-
-const chartJSNodeCanvas = new ChartJSNodeCanvas({
-  width,
-  height,
-  chartCallback,
-  backgroundColour: 'white'
-});
 
 async function main() {
   const inputFile = process.argv[2];
@@ -49,13 +57,26 @@ async function main() {
   }
 
   if (!inputFile) {
-    console.error("! usage: ./make-chart-from.js <data.json> \"title\" chartType [visit-data]");
+    console.error("! usage: ./x-chart.js <data.json> \"title\" chartType [visit-data]");
     process.exit(1);
   }
 
-  const rawData = fs.readFileSync(inputFile, 'utf-8');
+
+  //read input data file
+  //const rawData = fs.readFileSync(inputFile, 'utf-8');
+
+  let rawData
+  try {
+    rawData = fs.readFileSync(inputFile, 'utf-8')
+  } catch (err) {
+    console.error(`! fail, reading file = ${inputFile}`)
+    process.exit(1)
+  }
+
   let data = JSON.parse(rawData);
 
+
+  
   // preprocess
   if (dataFormat === 'visit-data') {
     data = {
@@ -73,15 +94,18 @@ async function main() {
   let datasets;
 
   if (isMultiDataset) {
-    datasets = data.datasets.map((ds, i) => ({
-      label: ds.label,
-      data: ds.data,
-      backgroundColor: randomColor(),
-      borderColor: chartType === 'line' ? randomColor() : undefined,
-      borderWidth: 1,
-      fill: chartType === 'line' ? false : true,
-      tension: chartType === 'line' ? 0.3 : undefined
-    }));
+    datasets = data.datasets.map(ds => {
+      const color = randomColor();
+      return {
+        label: ds.label,
+        data: ds.data,
+        backgroundColor: color,
+        borderColor: color,
+        borderWidth: 1,
+        fill: chartType === 'line' ? false : true,
+        tension: chartType === 'line' ? 0.3 : undefined
+      };
+    });
   } else {
     if (!data.x || !data.y || !Array.isArray(data.x) || !Array.isArray(data.y)) {
       console.error("JSON must contain 'x' and 'y' arrays.");
@@ -90,8 +114,8 @@ async function main() {
     datasets = [{
       label: chartTitle,
       data: data.y,
-      backgroundColor: chartType === 'pie' ? data.x.map(_ => randomColor()) : 'rgba(54, 162, 235, 0.6)',
-      borderColor: chartType === 'pie' ? data.x.map(_ => '#fff') : 'rgba(54, 162, 235, 1)',
+      backgroundColor: chartType === 'pie' ? data.x.map(_ => randomColor()) : randomColor(),
+      borderColor: chartType === 'pie' ? data.x.map(_ => '#fff') : randomColor(),
       borderWidth: 1,
       fill: chartType === 'line' ? false : true,
       tension: chartType === 'line' ? 0.3 : undefined
@@ -105,6 +129,9 @@ async function main() {
       datasets: datasets
     },
     options: {
+      layout: {
+        padding: 10
+      },
       indexAxis: isHorizontal ? 'y' : 'x',
       responsive: true,
       plugins: {
@@ -112,13 +139,6 @@ async function main() {
           display: true,
           text: chartTitle,
           font: { size: 18 }
-        },
-        datalabels: {
-          color: '#000',
-          anchor: 'end',
-          align: 'top',
-          font: { weight: 'bold' },
-          formatter: Math.round
         }
       },
       scales: (chartType === 'bar' || chartType === 'line' || isHorizontal) ? {
@@ -126,13 +146,13 @@ async function main() {
         y: { ticks: { autoSkip: false } }
       } : undefined
     },
-    plugins: [chartjsPluginDatalabels]
+    plugins: [cornerStampPlugin]
   };
 
   const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
   const outputFile = path.basename(inputFile, '.json') + '.png';
   fs.writeFileSync(outputFile, imageBuffer);
-  console.log(`Chart saved as ${outputFile}`);
+  console.log(`! output file = ${outputFile}`);
 }
 
 function randomColor() {

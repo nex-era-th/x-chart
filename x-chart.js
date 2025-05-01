@@ -3,7 +3,7 @@
 /*{
   program   : make-chart-from.js,
   for       : make chart from json data,
-  how: $ ./x-chart.js data.json "title" bar|bar-h|line|pie [visit-data]
+  how       : $ ./x-chart.js data.json "title" bar|bar-h|line|pie [visit-data]
   by        : @devster,
   license   : none/cc0,
   directory : $home/node-x,
@@ -21,10 +21,14 @@ const fs = require('fs');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const path = require('path');
 const { prepData } = require('./prep-data.js');
+const ChartDataLabels = require('chartjs-plugin-datalabels'); // added
 
 const width = 800;
 const height = 600;
-const chartCallback = (ChartJS) => {};
+
+const chartCallback = (ChartJS) => {
+  ChartJS.register(ChartDataLabels); // register datalabels
+};
 
 const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback, backgroundColour: 'white' });
 
@@ -61,22 +65,16 @@ async function main() {
     process.exit(1);
   }
 
-
-  //read input data file
-  //const rawData = fs.readFileSync(inputFile, 'utf-8');
-
-  let rawData
+  let rawData;
   try {
-    rawData = fs.readFileSync(inputFile, 'utf-8')
+    rawData = fs.readFileSync(inputFile, 'utf-8');
   } catch (err) {
-    console.error(`! fail, reading file = ${inputFile}`)
-    process.exit(1)
+    console.error(`! fail, reading file = ${inputFile}`);
+    process.exit(1);
   }
 
   let data = JSON.parse(rawData);
 
-
-  
   // preprocess
   if (dataFormat === 'visit-data') {
     data = {
@@ -139,6 +137,14 @@ async function main() {
           display: true,
           text: chartTitle,
           font: { size: 18 }
+        },
+        datalabels: {
+          color: '#333',
+          font: { size: 10 },
+          anchor: 'end',
+          align: 'top',
+          offset: -6,
+          formatter: Math.round
         }
       },
       scales: (chartType === 'bar' || chartType === 'line' || isHorizontal) ? {

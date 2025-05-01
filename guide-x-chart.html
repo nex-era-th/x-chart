@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"></head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src=""></script>
+  <link rel="stylesheet" type="text/css" href="">
+  <style>
+    code { color: #5c6bc0 }
+    h2 { font-style: italic }
+    h3 { text-decoration: underline }
+    table { border-collapse: collapse; width: 100% } 
+    table, th, td { border: 1px solid black;  }
+    th, td { padding: 4px 8px }
+    .indent, .indent-16 { margin-left: 16px }
+    .sans-serif, .sans { font-family: sans-serif }
+    .mono { font-family: monospace }
+    .red { color: red }
+    .green { color: green }
+    .blue { color: blue }
+    .yellow { color: yellow }
+    .orange { color: orange }
+    .brown { color: brown }
+    .gray { color: gray }
+    .pink { color: pink }
+    .purple { color: purple}
+    .indigo { color: #5c6bc0 }
+    .c { text-align: center }
+    .r { text-align: right }
+    .l { text-align: left }
+  </style>
+<body><h1>guide for x-chart.js</h1><p><small><i>--Thu May 01 2025 08:02:08 GMT+0700 (Indochina Time) version=1.0.0 author=@devster</i></small></p><p>this is a simple nodejs program to make charts. Drawing right now the bar (default), bar-h (horizontal bar), line and pie charts.</p><hr><h2 id="how">how to use</h2><pre style="white-space: pre-wrap"><code>
+$ ./x-chart.js data.json "title of the chart" bar*|bar-h|line|pie [visit-data]
+
+
+</code></pre><p>the 'must be there' parameters are: <code>data.json</code> and the <code>"chart title"</code></p><p>the <code>bar</code> is default, if you didn't put it, it becomes <code>bar</code></p><p>the <code>visit-data</code> if you didn't put it, it will regard the data as raw/normal format. If you put it, the program regards it is the <code>nexweb's visiting data format</code></p><hr><h2 id="data">data format</h2><p>for 1 dataset:</p><pre style="white-space: pre-wrap"><code>
+{
+  x: ["thailand","malaysia","singapore",...],
+  y: [425421, 46542, 784542]
+}
+
+</code></pre><p>for multiple datasets:</p><pre style="white-space: pre-wrap"><code>
+{
+  "x": ["jan","feb","mar","apr","may","jun"],
+  "datasets":[
+    { 
+	"label":"thailand", 
+	"data":[12,45,85,568,45,785]
+    },
+    { 
+	"label":"singapore", 
+	"data":[785,456,12,458,854,65]
+    },
+    { 
+	"label":"malaysia",
+      	"data":[452,45,85,65,325,785]
+    }
+  ]
+}
+
+</code></pre><hr><h2 id="install">install</h2><p>you have to have these things:</p><ul><li>nodejs</li><li>npm</li><li>chartjs-node-canvas</li><li>fs</li><li>path</li><li>chartjs-plugin-datalabels</li></ul><p>so, in short, these are installation steps:</p><pre style="white-space: pre-wrap"><code>(in ubuntu bash)
+
+$ sudo apt update
+$ sudo apt install nodejs npm
+
+$ mkdir your-dir
+$ cp make-chart-from.js your-dir
+$ cd your-dir
+$ npm init
+$ npm install fs path chartjs-node-canvas chartjs-module-datalabels
+
+</code></pre><p>then once all finished no problem, you can start making charts.</p><hr><h2>sample</h2><p><img src="bar.png" style="width: 100%"></p><p><img src="bar-h.png" style="width: 100%"></p><p><img src="line.png" style="width: 100%"></p><p><img src="pie.png" style="width: 100%"></p><p><img src="visit-barH.png" style="width: 100%"></p><p>we've just lately adding the datalabel into the chart so you now see things like:</p><p><img src="bar-label.png" style="width: 100%"></p><p><img src="line-label.png" style="width: 100%"></p><hr><h2>data processing </h2><p>if you want to process something about data, you can do it in this file <code> prep-data.js </code> like:</p><pre style="white-space: pre-wrap"><code>
+return {
+  x: input_data.map(v =&gt; v.date),
+  y: input_data.map(v =&gt; v.value)
+}
+
+
+</code></pre><hr><h2>note</h2><p>this is a raw, no fancy thing, program just to make a quick chart, from command line. Platform here is Ubuntu, not test in other thing yet.</p><p>Happy using it, hope it helps a little :-D</p>
+</body>
+</html>

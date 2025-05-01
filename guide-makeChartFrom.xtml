@@ -1,0 +1,109 @@
+{{
+
+  program = make-chart-from.js
+  version = 0.2
+  for     = making chart in command line
+  by      = @devster
+  license = none/cc0
+  status  = dev
+
+}}
+
+# guide for make-chart-from.js
+
+[s]//--{{ $date }} version={{ version}} author={{ by }}//[s]
+
+
+this is a simple nodejs program to make charts. Drawing right now the bar (default), bar-h (horizontal bar), line and pie charts.
+
+## how to use [#how]
+
+[c]
+
+$ ./make-chart-from.js data.json "title of the chart" bar|bar-h|line|pie visit-data*
+
+
+[c.]
+
+the 'must be there' parameters are: [c]data.json[c] and the [c]"chart title"[c]
+
+the [c]bar[c] is default, if you didn't put it, it becomes [c]bar[c]
+
+the [c]visit-data[c] if you didn't put it, it will regard the data as raw/normal format. If you put it, the program regards it is the [c]nexweb's visiting data format[c]
+
+
+## data format [#data]
+
+[c]
+
+{
+  x: ["thailand","malaysia","singapore",...],
+  y: [425421, 46542, 784542]
+}
+
+[c.]
+
+
+## install [#install]
+
+you have to have these things:
+
+. nodejs
+. npm
+. chartjs-node-canvas
+. fs
+. path
+
+so, in short, these are installation steps:
+
+[c]
+(in ubuntu bash)
+
+$ sudo apt update
+$ sudo apt install nodejs npm
+
+$ mkdir your-dir
+$ cp make-chart-from.js your-dir
+$ cd your-dir
+$ npm init
+$ npm install fs path chartjs-node-canvas
+
+[c.]
+
+then once all finished no problem, you can start making charts.
+
+
+
+## sample
+
+[[ $img = bar.png ]]
+[[ $img = bar-h.png ]]
+[[ $img = line.png ]]
+[[ $img = pie.png ]]
+[[ $img = visit-barH.png ]]
+
+
+
+
+## data processing 
+
+if you want to process something about data, you can do it in this file [c] prep-data.js [c] like:
+
+[c]
+
+return {
+  x: input_data.map(v => v.date),
+  y: input_data.map(v => v.value)
+}
+
+
+[c.]
+
+
+
+
+## note
+
+this is a raw, no fancy thing, program just to make a quick chart, from command line. Platform here is Ubuntu, not test in other thing yet.
+
+Happy using it, hope it helps a little :-D

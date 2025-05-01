@@ -13,7 +13,7 @@
 
 // help
 if (process.argv[2] === 'help') {
-  console.log('syntax:\n./make-chart-from.js data.json "chart title" bar*|bar-h|line|pie [visit-data]')
+  console.log('! syntax:\n./make-chart-from.js data.json "chart title" bar*|bar-h|line|pie [visit-data]')
   process.exit(0)
 }
 
@@ -57,13 +57,26 @@ async function main() {
   }
 
   if (!inputFile) {
-    console.error("! usage: ./make-chart-from.js <data.json> \"title\" chartType [visit-data]");
+    console.error("! usage: ./x-chart.js <data.json> \"title\" chartType [visit-data]");
     process.exit(1);
   }
 
-  const rawData = fs.readFileSync(inputFile, 'utf-8');
+
+  //read input data file
+  //const rawData = fs.readFileSync(inputFile, 'utf-8');
+
+  let rawData
+  try {
+    rawData = fs.readFileSync(inputFile, 'utf-8')
+  } catch (err) {
+    console.error(`! fail, reading file = ${inputFile}`)
+    process.exit(1)
+  }
+
   let data = JSON.parse(rawData);
 
+
+  
   // preprocess
   if (dataFormat === 'visit-data') {
     data = {
@@ -139,7 +152,7 @@ async function main() {
   const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
   const outputFile = path.basename(inputFile, '.json') + '.png';
   fs.writeFileSync(outputFile, imageBuffer);
-  console.log(`Chart saved as ${outputFile}`);
+  console.log(`! output file = ${outputFile}`);
 }
 
 function randomColor() {

@@ -1,6 +1,6 @@
 ```bash
 
-$ ./chart.js data.json "title...."
+$ ./x-chart.js data.json "title...."
 
 ```
 

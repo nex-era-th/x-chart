@@ -3,7 +3,7 @@
 /*{
   program   : make-chart-from.js,
   for       : make chart from json data,
-  how       : $ ./x-chart.js data.json "title" bar|bar-h|line|pie [visit-data]
+  how       : $ ./x-chart.js data.json "title" bar|bar-h|line|pie [visit-data|std] [hide-datalabel]
   by        : @devster,
   license   : none/cc0,
   directory : $home/node-x,

@@ -36,6 +36,19 @@ the [c]bar[c] is default, if you didn't put it, it becomes [c]bar[c]
 the [c]visit-data[c] if you didn't put it, it will regard the data as raw/normal format. If you put it, the program regards it is the [c]nexweb's visiting data format[c]
 
 
+### to hide datalabel
+
+just added a new parameter [c] hide-datalabel [c] so now we can hide the datalabel because sometimes on a line chart that showing time-base data like stock index/values, showing datalabel is headache. So do this:
+
+[c]
+
+$ ./x-chart.js data.json "title..." line std hide-datalabel
+
+[c.]
+
+
+the [c] std [c] is set when you not put [c] visit-data [c] and then we put [c] hide-datalabel [c] to let x-chart hide it. That's it.
+
 --------------------------------------------------------------
 
 ## data format [#data]

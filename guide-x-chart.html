@@ -30,11 +30,14 @@
     .r { text-align: right }
     .l { text-align: left }
   </style>
-<body><h1>guide for x-chart.js</h1><p><small><i>--Thu May 01 2025 08:02:08 GMT+0700 (Indochina Time) version=1.0.0 author=@devster</i></small></p><p>this is a simple nodejs program to make charts. Drawing right now the bar (default), bar-h (horizontal bar), line and pie charts.</p><hr><h2 id="how">how to use</h2><pre style="white-space: pre-wrap"><code>
+<body><h1>guide for x-chart.js</h1><p><small><i>--Fri May 02 2025 13:31:54 GMT+0700 (Indochina Time) version=1.0.0 author=@devster</i></small></p><p>this is a simple nodejs program to make charts. Drawing right now the bar (default), bar-h (horizontal bar), line and pie charts.</p><hr><h2 id="how">how to use</h2><pre style="white-space: pre-wrap"><code>
 $ ./x-chart.js data.json "title of the chart" bar*|bar-h|line|pie [visit-data]
 
 
-</code></pre><p>the 'must be there' parameters are: <code>data.json</code> and the <code>"chart title"</code></p><p>the <code>bar</code> is default, if you didn't put it, it becomes <code>bar</code></p><p>the <code>visit-data</code> if you didn't put it, it will regard the data as raw/normal format. If you put it, the program regards it is the <code>nexweb's visiting data format</code></p><hr><h2 id="data">data format</h2><p>for 1 dataset:</p><pre style="white-space: pre-wrap"><code>
+</code></pre><p>the 'must be there' parameters are: <code>data.json</code> and the <code>"chart title"</code></p><p>the <code>bar</code> is default, if you didn't put it, it becomes <code>bar</code></p><p>the <code>visit-data</code> if you didn't put it, it will regard the data as raw/normal format. If you put it, the program regards it is the <code>nexweb's visiting data format</code></p><h3>to hide datalabel</h3><p>just added a new parameter <code> hide-datalabel </code> so now we can hide the datalabel because sometimes on a line chart that showing time-base data like stock index/values, showing datalabel is headache. So do this:</p><pre style="white-space: pre-wrap"><code>
+$ ./x-chart.js data.json "title..." line std hide-datalabel
+
+</code></pre><p>the <code> std </code> is set when you not put <code> visit-data </code> and then we put <code> hide-datalabel </code> to let x-chart hide it. That's it.</p><hr><h2 id="data">data format</h2><p>for 1 dataset:</p><pre style="white-space: pre-wrap"><code>
 {
   x: ["thailand","malaysia","singapore",...],
   y: [425421, 46542, 784542]

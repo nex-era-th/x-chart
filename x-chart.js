@@ -13,7 +13,7 @@
 
 // help
 if (process.argv[2] === 'help') {
-  console.log('! syntax:\n./make-chart-from.js data.json "chart title" bar*|bar-h|line|pie [visit-data]')
+  console.log('! syntax:\n./make-chart-from.js data.json "chart title" bar*|bar-h|line|pie [visit-data|std] [hide-datalabel]')
   process.exit(0)
 }
 
@@ -53,6 +53,7 @@ async function main() {
   const chartTitle = process.argv[3] || 'Generated Chart';
   const chartTypeArg = process.argv[4] || 'bar';
   const dataFormat = process.argv[5];
+  const showDataLabel = process.argv[6] !== 'hide-datalabel'
 
   const supportedChartTypes = ['bar', 'bar-h', 'line', 'pie'];
   if (!supportedChartTypes.includes(chartTypeArg)) {
@@ -138,14 +139,14 @@ async function main() {
           text: chartTitle,
           font: { size: 18 }
         },
-        datalabels: {
+        datalabels: showDataLabel ? {
           color: '#333',
           font: { size: 10 },
           anchor: 'end',
           align: 'top',
           offset: -6,
           formatter: Math.round
-        }
+        } : false
       },
       scales: (chartType === 'bar' || chartType === 'line' || isHorizontal) ? {
         x: { beginAtZero: true },

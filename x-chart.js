@@ -100,7 +100,7 @@ async function main() {
         data: ds.data,
         backgroundColor: color,
         borderColor: color,
-        borderWidth: 1,
+        borderWidth: 6, //old is 1
         fill: chartType === 'line' ? false : true,
         tension: chartType === 'line' ? 0.3 : undefined
       };
@@ -115,7 +115,7 @@ async function main() {
       data: data.y,
       backgroundColor: chartType === 'pie' ? data.x.map(_ => randomColor()) : randomColor(),
       borderColor: chartType === 'pie' ? data.x.map(_ => '#fff') : randomColor(),
-      borderWidth: 1,
+      borderWidth: 6, //old is 1
       fill: chartType === 'line' ? false : true,
       tension: chartType === 'line' ? 0.3 : undefined
     }];
